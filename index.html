@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Direct and Inverse Proportion — Ganita Prakash Grade 8</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f5f4f0;--surface:#ffffff;--surface2:#f0ede8;
+  --border:#d8d4cc;--text:#1a1814;--text2:#5a5650;--text3:#9a958e;
+  --accent:#c0392b;--blue:#2c7be5;--green:#1a7a4a;
+  --font:'DM Sans',-apple-system,sans-serif;--mono:'DM Mono',ui-monospace,monospace;
+}
+body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:100vh;-webkit-font-smoothing:antialiased;line-height:1.5}
+.page{max-width:940px;margin:0 auto;padding:32px 24px}
+.label{font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--text3);margin-bottom:6px}
+.title{font-size:22px;font-weight:700;margin-bottom:6px}
+.subtitle{font-size:14px;color:var(--text2);margin-bottom:24px;max-width:600px;line-height:1.55}
+.card{background:var(--surface);border:1.5px solid var(--border);border-radius:12px;padding:24px;margin-bottom:20px}
+
+/* Side by side panels */
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:20px}
+@media(max-width:620px){.two-col{grid-template-columns:1fr}}
+.prop-panel{background:var(--surface2);border:1.5px solid var(--border);border-radius:12px;padding:20px;display:flex;flex-direction:column;gap:14px}
+.panel-title{font-size:14px;font-weight:700;color:var(--text);margin-bottom:2px}
+.panel-type{font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;padding:3px 9px;border-radius:5px;display:inline-block;margin-bottom:4px}
+.panel-type.direct{background:#d0f5e8;color:#1a7a4a}
+.panel-type.inverse{background:#ffe0e0;color:#c0392b}
+.scenario-text{font-size:13px;color:var(--text2);line-height:1.5;padding:10px 13px;background:var(--surface);border-radius:8px;border:1.5px solid var(--border)}
+
+/* Scenario selector */
+.sc-row{display:flex;gap:6px;flex-wrap:wrap}
+.sc-btn{padding:5px 11px;border:1.5px solid var(--border);border-radius:7px;font-size:12px;font-weight:500;color:var(--text2);background:var(--surface);cursor:pointer;font-family:var(--font);transition:all .1s}
+.sc-btn.active{border-color:currentColor;font-weight:700}
+.sc-btn.direct-btn.active{color:#1a7a4a;background:#f0faf5;border-color:#1a7a4a}
+.sc-btn.inverse-btn.active{color:#c0392b;background:#fff5f5;border-color:#c0392b}
+
+/* Slider */
+.slider-section{display:flex;flex-direction:column;gap:6px}
+.slider-header{display:flex;justify-content:space-between;align-items:baseline}
+.slider-xlabel{font-size:12.5px;font-weight:600;color:var(--text2)}
+.slider-xval{font-family:var(--mono);font-size:20px;font-weight:700}
+.slider-xval.direct{color:#1a7a4a}
+.slider-xval.inverse{color:#c0392b}
+input[type=range]{width:100%;height:6px;cursor:pointer;border-radius:3px}
+
+/* y result */
+.y-result{display:flex;justify-content:space-between;align-items:center;background:var(--surface);border:1.5px solid var(--border);border-radius:8px;padding:10px 14px}
+.y-label{font-size:12.5px;font-weight:600;color:var(--text2)}
+.y-val{font-family:var(--mono);font-size:22px;font-weight:700;color:var(--text)}
+
+/* Constant highlight */
+.const-row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.const-box{border-radius:8px;padding:10px 13px;text-align:center;border:2px solid transparent}
+.const-box.fixed{border-color:currentColor}
+.const-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px}
+.const-val{font-family:var(--mono);font-size:16px;font-weight:700}
+.const-box.green{background:#f0faf5;color:#1a7a4a}
+.const-box.red{background:#fff5f5;color:#c0392b}
+.const-box.muted{background:var(--surface);color:var(--text3);border-color:var(--border)}
+
+/* Graph */
+canvas.graph{display:block;width:100%;border-radius:8px;background:#fafaf8;border:1.5px solid var(--border)}
+
+/* Bottom insight */
+.insight-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
+@media(max-width:620px){.insight-grid{grid-template-columns:1fr}}
+.insight-card{border-radius:10px;padding:16px 18px;font-size:13.5px;line-height:1.65}
+.insight-card.green{background:#f0faf5;border:1.5px solid #b0e8cc;color:#1a4a2a}
+.insight-card.red{background:#fff5f5;border:1.5px solid #f0c0c0;color:#5a1a1a}
+.insight-card strong{font-weight:700}
+.insight-card .eq{font-family:var(--mono);font-size:12.5px;display:block;margin:4px 0;opacity:.8}
+
+/* Key difference box */
+.key-diff{background:var(--surface2);border:1.5px solid var(--border);border-radius:12px;padding:18px 20px}
+.key-diff-title{font-size:13px;font-weight:700;color:var(--text);margin-bottom:12px}
+.kd-row{display:flex;gap:14px;align-items:flex-start;margin-bottom:8px;font-size:13.5px;line-height:1.55}
+.kd-badge{padding:3px 10px;border-radius:6px;font-size:11px;font-weight:700;letter-spacing:.04em;flex-shrink:0;margin-top:2px}
+.kd-badge.d{background:#d0f5e8;color:#1a7a4a}
+.kd-badge.i{background:#ffe0e0;color:#c0392b}
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="label">Chapter 3 · Proportional Reasoning – 2</div>
+  <div class="title">Direct and Inverse Proportion</div>
+  <div class="subtitle">Move the slider and watch how y responds. The key difference: in direct proportion the quotient x÷y stays fixed; in inverse proportion the product x×y stays fixed. One constant is always chasing the other.</div>
+
+  <div class="two-col">
+    <!-- DIRECT -->
+    <div class="prop-panel">
+      <div>
+        <div class="panel-type direct">Direct proportion</div>
+        <div class="panel-title" id="dTitle">Distance and time at fixed speed</div>
+      </div>
+
+      <div class="sc-row" id="dScenarios">
+        <button class="sc-btn direct-btn active" data-d="0">Speed &amp; distance</button>
+        <button class="sc-btn direct-btn" data-d="1">Cost of pencils</button>
+        <button class="sc-btn direct-btn" data-d="2">Idli batter</button>
+      </div>
+
+      <div class="scenario-text" id="dContext"></div>
+
+      <div class="slider-section">
+        <div class="slider-header">
+          <span class="slider-xlabel" id="dXLabel">Time (hours)</span>
+          <span class="slider-xval direct" id="dXVal">3</span>
+        </div>
+        <input type="range" id="dSlider" min="1" max="12" step="1" value="3" style="accent-color:#1a7a4a">
+      </div>
+
+      <div class="y-result">
+        <span class="y-label" id="dYLabel">Distance</span>
+        <span class="y-val" id="dYVal">—</span>
+      </div>
+
+      <canvas class="graph" id="dGraph" height="160"></canvas>
+
+      <div class="const-row">
+        <div class="const-box green fixed">
+          <div class="const-label">x ÷ y (fixed!)</div>
+          <div class="const-val" id="dQuotient">—</div>
+        </div>
+        <div class="const-box muted">
+          <div class="const-label">x × y (changes)</div>
+          <div class="const-val" id="dProduct">—</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- INVERSE -->
+    <div class="prop-panel">
+      <div>
+        <div class="panel-type inverse">Inverse proportion</div>
+        <div class="panel-title" id="iTitle">Workers and days for a fixed job</div>
+      </div>
+
+      <div class="sc-row" id="iScenarios">
+        <button class="sc-btn inverse-btn active" data-i="0">Workers &amp; days</button>
+        <button class="sc-btn inverse-btn" data-i="1">Speed &amp; travel time</button>
+        <button class="sc-btn inverse-btn" data-i="2">Pumps &amp; fill time</button>
+      </div>
+
+      <div class="scenario-text" id="iContext"></div>
+
+      <div class="slider-section">
+        <div class="slider-header">
+          <span class="slider-xlabel" id="iXLabel">Workers</span>
+          <span class="slider-xval inverse" id="iXVal">20</span>
+        </div>
+        <input type="range" id="iSlider" min="1" max="40" step="1" value="20" style="accent-color:#c0392b">
+      </div>
+
+      <div class="y-result">
+        <span class="y-label" id="iYLabel">Days needed</span>
+        <span class="y-val" id="iYVal">—</span>
+      </div>
+
+      <canvas class="graph" id="iGraph" height="160"></canvas>
+
+      <div class="const-row">
+        <div class="const-box muted">
+          <div class="const-label">x ÷ y (changes)</div>
+          <div class="const-val" id="iQuotient">—</div>
+        </div>
+        <div class="const-box red fixed">
+          <div class="const-label">x × y (fixed!)</div>
+          <div class="const-val" id="iProduct">—</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Insight cards -->
+  <div class="insight-grid">
+    <div class="insight-card green">
+      <strong>Direct proportion</strong> — same direction<br>
+      Double x → y also doubles. The graph is a <strong>straight line through the origin</strong>.
+      <span class="eq">x/y = k &nbsp;&nbsp; (constant quotient)</span>
+      Examples: more time at fixed speed → more distance; more pencils → more cost.
+    </div>
+    <div class="insight-card red">
+      <strong>Inverse proportion</strong> — opposite direction<br>
+      Double x → y halves. The graph is a <strong>curve (hyperbola)</strong> that never touches the axes.
+      <span class="eq">x × y = k &nbsp;&nbsp; (constant product)</span>
+      Examples: more workers → fewer days; faster speed → less travel time.
+    </div>
+  </div>
+
+  <div class="key-diff">
+    <div class="key-diff-title">Quick test — how to tell which kind?</div>
+    <div class="kd-row"><span class="kd-badge d">Direct</span> If x doubles and y also doubles — it is direct. The ratio x:y stays the same.</div>
+    <div class="kd-row"><span class="kd-badge i">Inverse</span> If x doubles and y halves — it is inverse. The product x×y stays the same.</div>
+    <div class="kd-row"><span class="kd-badge d">Direct</span> The graph is a straight line starting at (0,0).</div>
+    <div class="kd-row"><span class="kd-badge i">Inverse</span> The graph is a curve bending away from both axes.</div>
+  </div>
+</div>
+
+<script>
+const D_SCENARIOS = [
+  {
+    title:'Distance and time at fixed speed',
+    context:'A car travels at 60 km/h. The more time it drives, the greater the distance — both increase together.',
+    xLabel:'Time (hours)', yLabel:'Distance (km)',
+    k:60, xMin:1, xMax:12, xStep:1, xDefault:3,
+    fn: x => 60*x,
+    fmt: y => y + ' km',
+  },
+  {
+    title:'Cost and number of pencils',
+    context:'Each pencil costs ₹6. The more pencils you buy, the more you pay — the ratio pencils:cost is always the same.',
+    xLabel:'Pencils bought', yLabel:'Cost (₹)',
+    k:6, xMin:1, xMax:20, xStep:1, xDefault:5,
+    fn: x => 6*x,
+    fmt: y => '₹' + y,
+  },
+  {
+    title:'Idli batter: rice and urad dal',
+    context:'The ratio is 2:1. For every 2 cups of rice you add 1 cup of dal — both scale together.',
+    xLabel:'Cups of rice', yLabel:'Cups of urad dal',
+    k:0.5, xMin:1, xMax:12, xStep:1, xDefault:4,
+    fn: x => x*0.5,
+    fmt: y => y + ' cups',
+  },
+];
+
+const I_SCENARIOS = [
+  {
+    title:'Workers and days for a fixed job',
+    context:'20 workers finish a road in 4 days. Add more workers and they finish faster — the product workers×days stays the same.',
+    xLabel:'Workers', yLabel:'Days needed',
+    k:80, xMin:1, xMax:40, xStep:1, xDefault:20,
+    fn: x => 80/x,
+    fmt: y => (y%1===0?y:y.toFixed(1)) + ' days',
+  },
+  {
+    title:'Speed and travel time',
+    context:'The distance from Lucknow to Kanpur is 90 km. Go faster and you arrive sooner — speed×time is always 90.',
+    xLabel:'Speed (km/h)', yLabel:'Time (hours)',
+    k:90, xMin:5, xMax:90, xStep:5, xDefault:30,
+    fn: x => 90/x,
+    fmt: y => (y%1===0?y:y.toFixed(2)) + ' hrs',
+  },
+  {
+    title:'Pumps and time to fill a tank',
+    context:'1 pump fills a tank in 6 hours. More pumps → less time. The total pump-hours is always 6.',
+    xLabel:'Number of pumps', yLabel:'Hours to fill',
+    k:6, xMin:1, xMax:12, xStep:1, xDefault:2,
+    fn: x => 6/x,
+    fmt: y => (y%1===0?y:y.toFixed(2)) + ' hrs',
+  },
+];
+
+let dIdx = 0, iIdx = 0;
+let dX, iX;
+
+function initD() {
+  const sc = D_SCENARIOS[dIdx];
+  dX = sc.xDefault;
+  document.getElementById('dTitle').textContent = sc.title;
+  document.getElementById('dContext').textContent = sc.context;
+  document.getElementById('dXLabel').textContent = sc.xLabel;
+  document.getElementById('dYLabel').textContent = sc.yLabel;
+  const sl = document.getElementById('dSlider');
+  sl.min=sc.xMin; sl.max=sc.xMax; sl.step=sc.xStep; sl.value=dX;
+  updateD();
+}
+
+function initI() {
+  const sc = I_SCENARIOS[iIdx];
+  iX = sc.xDefault;
+  document.getElementById('iTitle').textContent = sc.title;
+  document.getElementById('iContext').textContent = sc.context;
+  document.getElementById('iXLabel').textContent = sc.xLabel;
+  document.getElementById('iYLabel').textContent = sc.yLabel;
+  const sl = document.getElementById('iSlider');
+  sl.min=sc.xMin; sl.max=sc.xMax; sl.step=sc.xStep; sl.value=iX;
+  updateI();
+}
+
+function updateD() {
+  const sc = D_SCENARIOS[dIdx];
+  const y = sc.fn(dX);
+  document.getElementById('dXVal').textContent = dX;
+  document.getElementById('dYVal').textContent = sc.fmt(y);
+  document.getElementById('dQuotient').textContent = (dX/y).toFixed(4);
+  document.getElementById('dProduct').textContent = Math.round(dX*y).toLocaleString();
+  drawGraph('dGraph', dX, sc.xMin, sc.xMax, sc.fn, '#1a7a4a', sc.xLabel, sc.yLabel);
+}
+
+function updateI() {
+  const sc = I_SCENARIOS[iIdx];
+  const y = sc.fn(iX);
+  document.getElementById('iXVal').textContent = iX;
+  document.getElementById('iYVal').textContent = sc.fmt(y);
+  document.getElementById('iQuotient').textContent = (iX/y).toFixed(3);
+  document.getElementById('iProduct').textContent = (iX*y).toFixed(1);
+  drawGraph('iGraph', iX, sc.xMin, sc.xMax, sc.fn, '#c0392b', sc.xLabel, sc.yLabel);
+}
+
+function drawGraph(id, curX, minX, maxX, fn, color, xLbl, yLbl) {
+  const cvs = document.getElementById(id);
+  const PR = window.devicePixelRatio||1;
+  const W = cvs.parentElement.clientWidth;
+  cvs.width=W*PR; cvs.height=160*PR;
+  cvs.style.width=W+'px'; cvs.style.height='160px';
+  const ctx=cvs.getContext('2d');
+  ctx.scale(PR,PR);
+  ctx.fillStyle='#fafaf8'; ctx.fillRect(0,0,W,160);
+
+  const PAD={l:40,r:12,t:14,b:28};
+  const cW=W-PAD.l-PAD.r, cH=160-PAD.t-PAD.b;
+
+  // Sample points
+  const steps=60;
+  const pts=[];
+  for(let i=0;i<=steps;i++){
+    const x=minX+(maxX-minX)*i/steps;
+    pts.push({x,y:fn(x)});
+  }
+  const maxY=Math.max(...pts.map(p=>p.y));
+  const px=x=>PAD.l+((x-minX)/(maxX-minX))*cW;
+  const py=y=>PAD.t+cH-(y/maxY)*cH;
+
+  // Grid
+  ctx.strokeStyle='#e8e4de'; ctx.lineWidth=1;
+  [0.25,0.5,0.75,1].forEach(f=>{
+    const y=PAD.t+cH*(1-f);
+    ctx.beginPath(); ctx.moveTo(PAD.l,y); ctx.lineTo(W-PAD.r,y); ctx.stroke();
+    ctx.fillStyle='#9a958e'; ctx.font='9px DM Mono'; ctx.textAlign='right';
+    ctx.fillText(Math.round(maxY*f), PAD.l-4, y+4);
+  });
+
+  // Axis labels
+  ctx.fillStyle='#9a958e'; ctx.font='9px DM Sans'; ctx.textAlign='center';
+  ctx.fillText(xLbl, PAD.l+cW/2, 158);
+
+  // Curve
+  ctx.beginPath(); ctx.strokeStyle=color; ctx.lineWidth=2.5;
+  pts.forEach((p,i)=>i===0?ctx.moveTo(px(p.x),py(p.y)):ctx.lineTo(px(p.x),py(p.y)));
+  ctx.stroke();
+
+  // Current point + dotted lines
+  const curY=fn(curX);
+  ctx.setLineDash([4,3]); ctx.strokeStyle=color+'80'; ctx.lineWidth=1;
+  ctx.beginPath(); ctx.moveTo(px(curX),py(curY)); ctx.lineTo(px(curX),PAD.t+cH); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(px(curX),py(curY)); ctx.lineTo(PAD.l,py(curY)); ctx.stroke();
+  ctx.setLineDash([]);
+
+  ctx.beginPath(); ctx.fillStyle=color;
+  ctx.arc(px(curX),py(curY),6,0,Math.PI*2); ctx.fill();
+  ctx.strokeStyle='#fff'; ctx.lineWidth=2; ctx.stroke();
+}
+
+// Sliders
+document.getElementById('dSlider').oninput=e=>{dX=parseFloat(e.target.value);updateD();};
+document.getElementById('iSlider').oninput=e=>{iX=parseFloat(e.target.value);updateI();};
+
+// Scenario buttons
+document.querySelectorAll('.sc-btn[data-d]').forEach(btn=>{
+  btn.onclick=()=>{
+    dIdx=parseInt(btn.dataset.d);
+    document.querySelectorAll('.sc-btn[data-d]').forEach(b=>b.classList.toggle('active',b===btn));
+    initD();
+  };
+});
+document.querySelectorAll('.sc-btn[data-i]').forEach(btn=>{
+  btn.onclick=()=>{
+    iIdx=parseInt(btn.dataset.i);
+    document.querySelectorAll('.sc-btn[data-i]').forEach(b=>b.classList.toggle('active',b===btn));
+    initI();
+  };
+});
+
+window.addEventListener('resize',()=>{updateD();updateI();});
+initD(); initI();
+</script>
+</body>
+</html>
